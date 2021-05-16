@@ -5,10 +5,16 @@ using MLAPI;
 using MLAPI.Spawning;
 using System;
 using Random=UnityEngine.Random;// Si sale error con random cambiarlo por: Random=System.Random
+using MLAPI.Transports.UNET;
 
 public class ConectionManager : MonoBehaviour
 {
     public GameObject ConnectionButtonPanel; 
+
+    public string IpAddress = "127.0.0.1";
+
+    UNetTransport transport;
+
     public void Host()
     {
         ConnectionButtonPanel.SetActive(false);
@@ -26,6 +32,8 @@ public class ConectionManager : MonoBehaviour
 
     public void Join()
     {
+        transport = NetworkManager.Singleton.GetComponent<UNetTransport>();
+        transport.ConnectAddress = IpAddress;
         ConnectionButtonPanel.SetActive(false);
         NetworkManager.Singleton.NetworkConfig.ConnectionData = System.Text.Encoding.ASCII.GetBytes("Password1234");
         NetworkManager.Singleton.StartClient();
@@ -38,6 +46,10 @@ public class ConectionManager : MonoBehaviour
         float z = Random.Range(-10f, 10f);
 
         return new Vector3(x,y,z);
-    } 
+    }
+
+    public void IpAddressChanged(string newAddress) {
+        this.IpAddress = newAddress;
+    }
     
 }
